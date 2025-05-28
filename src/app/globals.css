@@ -1,0 +1,109 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* KLIQT Media Custom Styles */
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-black text-white;
+  }
+}
+
+@layer components {
+  /* KLIQT Neon Text Effect */
+  .neon-text {
+    @apply text-transparent bg-clip-text bg-kliqt-gradient;
+    text-shadow: 0 0 10px rgba(138, 255, 0, 0.5);
+  }
+  
+  /* KLIQT Button Styles */
+  .kliqt-btn-primary {
+    @apply bg-kliqt-primary text-black font-semibold px-6 py-3 rounded-2xl 
+           hover:bg-kliqt-primary/90 transition-all duration-300 
+           hover:shadow-lg hover:shadow-kliqt-primary/25;
+  }
+  
+  .kliqt-btn-secondary {
+    @apply bg-kliqt-secondary text-white font-semibold px-6 py-3 rounded-2xl 
+           hover:bg-kliqt-secondary/90 transition-all duration-300 
+           hover:shadow-lg hover:shadow-kliqt-secondary/25;
+  }
+  
+  /* KLIQT Card Styles */
+  .kliqt-card {
+    @apply bg-kliqt-gray/50 backdrop-blur-sm border border-gray-800 
+           rounded-2xl p-6 hover:border-kliqt-primary/30 
+           transition-all duration-300 hover:shadow-lg hover:shadow-kliqt-primary/10;
+  }
+  
+  /* KLIQT Gradient Background */
+  .kliqt-gradient-bg {
+    background: linear-gradient(135deg, #0f0f0f 0%, #1c1c1c 50%, #0f0f0f 100%);
+  }
+  
+  /* KLIQT Animated Gradient Border */
+  .kliqt-gradient-border {
+    @apply relative overflow-hidden rounded-2xl;
+  }
+  
+  .kliqt-gradient-border::before {
+    content: '';
+    @apply absolute inset-0 rounded-2xl p-[2px] bg-kliqt-gradient;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: xor;
+    -webkit-mask-composite: xor;
+  }
+  
+  /* KLIQT Glow Effect */
+  .kliqt-glow {
+    @apply animate-glow;
+  }
+  
+  /* KLIQT Hover Effects */
+  .kliqt-hover-lift {
+    @apply transition-transform duration-300 hover:-translate-y-2;
+  }
+}
+
+@layer utilities {
+  /* Custom scrollbar */
+  .kliqt-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .kliqt-scrollbar::-webkit-scrollbar-track {
+    @apply bg-kliqt-dark;
+  }
+  
+  .kliqt-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-kliqt-primary/50 rounded-full;
+  }
+  
+  .kliqt-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-kliqt-primary/70;
+  }
+}
+
+/* Loading Animation */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(138, 255, 0, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(138, 255, 0, 0.8), 0 0 30px rgba(138, 255, 0, 0.6);
+  }
+}
+
+.pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Responsive Design Helpers */
+@media (max-width: 768px) {
+  .mobile-padding {
+    @apply px-4;
+  }
+}
