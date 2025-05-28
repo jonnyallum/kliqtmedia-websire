@@ -38,7 +38,7 @@ export default function HomePage() {
               className="flex items-center space-x-3"
             >
               <img
-                src="https://i.ibb.co/tpXKsYdQ/logo.png"
+                src="https://i.ibb.co/B5NV5MR1/kliqtsvg.png"
                 alt="KLIQT Media Logo"
                 className="h-10 w-auto"
               />
@@ -73,7 +73,7 @@ export default function HomePage() {
             className="flex justify-center mb-8"
           >
             <img
-              src="https://i.ibb.co/tpXKsYdQ/logo.png"
+              src="https://i.ibb.co/B5NV5MR1/kliqtsvg.png"
               alt="KLIQT Media Logo"
               className="h-24 md:h-32 w-auto kliqt-glow"
             />
@@ -256,7 +256,7 @@ export default function HomePage() {
             <div>
               <div className="flex items-center space-x-3 mb-4">
                 <img
-                  src="https://i.ibb.co/tpXKsYdQ/logo.png"
+                  src="https://i.ibb.co/B5NV5MR1/kliqtsvg.png"
                   alt="KLIQT Media Logo"
                   className="h-8 w-auto"
                 />

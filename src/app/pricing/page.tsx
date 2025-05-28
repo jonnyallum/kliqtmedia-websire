@@ -184,7 +184,7 @@ export default function PricingPage() {
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="flex items-center space-x-3">
               <img
-                src="https://i.ibb.co/tpXKsYdQ/logo.png"
+                src="https://i.ibb.co/B5NV5MR1/kliqtsvg.png"
                 alt="KLIQT Media Logo"
                 className="h-10 w-auto"
               />
@@ -210,7 +210,7 @@ export default function PricingPage() {
           >
             <div className="flex justify-center mb-6">
               <img
-                src="https://i.ibb.co/tpXKsYdQ/logo.png"
+                src="https://i.ibb.co/B5NV5MR1/kliqtsvg.png"
                 alt="KLIQT Media Logo"
                 className="h-20 md:h-24 w-auto kliqt-glow"
               />
@@ -343,7 +343,7 @@ export default function PricingPage() {
             <div>
               <div className="flex items-center space-x-3 mb-4">
                 <img
-                  src="https://i.ibb.co/tpXKsYdQ/logo.png"
+                  src="https://i.ibb.co/B5NV5MR1/kliqtsvg.png"
                   alt="KLIQT Media Logo"
                   className="h-8 w-auto"
                 />
