@@ -2,11 +2,50 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Check, Star, Zap, Users, Bot, ArrowRight } from 'lucide-react'
+import { Check, Star, Zap, Users, Bot, ArrowRight, Loader2 } from 'lucide-react'
 import Link from 'next/link'
+import { getStripe } from '@/lib/stripe/client'
 
 export default function PricingPage() {
   const [isAnnual, setIsAnnual] = useState(false)
+  const [loadingCheckout, setLoadingCheckout] = useState<string | null>(null)
+
+  const handleCheckout = async (priceId: string, packageName: string) => {
+    setLoadingCheckout(priceId)
+    
+    try {
+      const response = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          priceId,
+          metadata: {
+            package_name: packageName,
+            source: 'pricing_page',
+          },
+        }),
+      })
+
+      const { url, error } = await response.json()
+
+      if (error) {
+        console.error('Checkout error:', error)
+        alert('Failed to create checkout session. Please try again.')
+        return
+      }
+
+      if (url) {
+        window.location.href = url
+      }
+    } catch (error) {
+      console.error('Checkout error:', error)
+      alert('Failed to create checkout session. Please try again.')
+    } finally {
+      setLoadingCheckout(null)
+    }
+  }
 
   const fadeInUp = {
     initial: { opacity: 0, y: 40 },
@@ -271,9 +310,22 @@ export default function PricingPage() {
                       ))}
                     </ul>
                     
-                    <button className="w-full kliqt-btn-primary group">
-                      Get Started
-                      <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                    <button
+                      onClick={() => handleCheckout(`price_${pkg.name.toLowerCase().replace(/[^a-z0-9]/g, '_')}`, pkg.name)}
+                      disabled={loadingCheckout === `price_${pkg.name.toLowerCase().replace(/[^a-z0-9]/g, '_')}`}
+                      className="w-full kliqt-btn-primary group disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {loadingCheckout === `price_${pkg.name.toLowerCase().replace(/[^a-z0-9]/g, '_')}` ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Processing...
+                        </>
+                      ) : (
+                        <>
+                          Get Started
+                          <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                        </>
+                      )}
                     </button>
                   </motion.div>
                 ))}

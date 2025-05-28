@@ -2,11 +2,15 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { User, Lock, Mail, ArrowRight, Users, Bot, BarChart3, Settings } from 'lucide-react'
+import { User, Lock, Mail, ArrowRight, Users, Bot, BarChart3, Settings, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
+import { useAuth } from '@/lib/auth/context'
 
 export default function PortalPage() {
+  const { signIn, signUp, loading } = useAuth()
   const [isLogin, setIsLogin] = useState(true)
+  const [error, setError] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -14,10 +18,30 @@ export default function PortalPage() {
     role: 'freelancer'
   })
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle authentication logic here
-    console.log('Form submitted:', formData)
+    setError('')
+    setIsSubmitting(true)
+
+    try {
+      if (isLogin) {
+        const { error } = await signIn(formData.email, formData.password)
+        if (error) {
+          setError(error.message)
+        }
+      } else {
+        const { error } = await signUp(formData.email, formData.password, formData.fullName)
+        if (error) {
+          setError(error.message)
+        } else {
+          setError('Check your email for a confirmation link!')
+        }
+      }
+    } catch (err) {
+      setError('An unexpected error occurred')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -126,6 +150,12 @@ export default function PortalPage() {
                   </div>
 
                   <form onSubmit={handleSubmit} className="space-y-6">
+                    {error && (
+                      <div className="flex items-center space-x-2 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+                        <AlertCircle className="h-4 w-4 text-red-400" />
+                        <span className="text-sm text-red-400">{error}</span>
+                      </div>
+                    )}
                     {!isLogin && (
                       <div>
                         <label className="block text-sm font-medium mb-2">Full Name</label>
@@ -193,10 +223,13 @@ export default function PortalPage() {
 
                     <button
                       type="submit"
-                      className="w-full kliqt-btn-primary group"
+                      disabled={isSubmitting || loading}
+                      className="w-full kliqt-btn-primary group disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {isLogin ? 'Sign In' : 'Create Account'}
-                      <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                      {isSubmitting ? 'Processing...' : (isLogin ? 'Sign In' : 'Create Account')}
+                      {!isSubmitting && (
+                        <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                      )}
                     </button>
                   </form>
 
