@@ -182,8 +182,13 @@ export default function PricingPage() {
       <nav className="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <Link href="/" className="text-2xl font-bold neon-text">
-              KLIQT Media
+            <Link href="/" className="flex items-center space-x-3">
+              <img
+                src="https://i.ibb.co/tpXKsYdQ/logo.png"
+                alt="KLIQT Media Logo"
+                className="h-10 w-auto"
+              />
+              <span className="text-2xl font-bold neon-text">KLIQT Media</span>
             </Link>
             <div className="hidden md:flex space-x-8">
               <Link href="/#services" className="hover:text-kliqt-primary transition-colors">Services</Link>
@@ -203,6 +208,13 @@ export default function PricingPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
+            <div className="flex justify-center mb-6">
+              <img
+                src="https://i.ibb.co/tpXKsYdQ/logo.png"
+                alt="KLIQT Media Logo"
+                className="h-20 md:h-24 w-auto kliqt-glow"
+              />
+            </div>
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               KLIQT Media – <span className="neon-text">2025 Price List</span>
             </h1>
@@ -329,7 +341,14 @@ export default function PricingPage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
-              <div className="text-2xl font-bold neon-text mb-4">KLIQT Media</div>
+              <div className="flex items-center space-x-3 mb-4">
+                <img
+                  src="https://i.ibb.co/tpXKsYdQ/logo.png"
+                  alt="KLIQT Media Logo"
+                  className="h-8 w-auto"
+                />
+                <span className="text-2xl font-bold neon-text">KLIQT Media</span>
+              </div>
               <p className="text-gray-400">
                 AI-powered content and freelancer platform for modern businesses.
               </p>

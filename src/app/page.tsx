@@ -32,12 +32,17 @@ export default function HomePage() {
       <nav className="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="text-2xl font-bold neon-text"
+              className="flex items-center space-x-3"
             >
-              KLIQT Media
+              <img
+                src="https://i.ibb.co/tpXKsYdQ/logo.png"
+                alt="KLIQT Media Logo"
+                className="h-10 w-auto"
+              />
+              <span className="text-2xl font-bold neon-text">KLIQT Media</span>
             </motion.div>
             <motion.div 
               initial={{ opacity: 0, x: 20 }}
@@ -57,13 +62,24 @@ export default function HomePage() {
       <section className="relative min-h-screen flex items-center justify-center kliqt-gradient-bg">
         <div className="absolute inset-0 bg-gradient-to-br from-kliqt-primary/5 via-transparent to-kliqt-secondary/5" />
         
-        <motion.div 
+        <motion.div
           className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10"
           variants={staggerContainer}
           initial="initial"
           animate="animate"
         >
-          <motion.h1 
+          <motion.div
+            variants={fadeInUp}
+            className="flex justify-center mb-8"
+          >
+            <img
+              src="https://i.ibb.co/tpXKsYdQ/logo.png"
+              alt="KLIQT Media Logo"
+              className="h-24 md:h-32 w-auto kliqt-glow"
+            />
+          </motion.div>
+          
+          <motion.h1
             variants={fadeInUp}
             className="text-4xl md:text-7xl font-bold mb-6"
           >
@@ -238,7 +254,14 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
-              <div className="text-2xl font-bold neon-text mb-4">KLIQT Media</div>
+              <div className="flex items-center space-x-3 mb-4">
+                <img
+                  src="https://i.ibb.co/tpXKsYdQ/logo.png"
+                  alt="KLIQT Media Logo"
+                  className="h-8 w-auto"
+                />
+                <span className="text-2xl font-bold neon-text">KLIQT Media</span>
+              </div>
               <p className="text-gray-400">
                 AI-powered content and freelancer platform for modern businesses.
               </p>

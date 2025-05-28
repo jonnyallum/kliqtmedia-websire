@@ -39,8 +39,13 @@ export default function PortalPage() {
       <nav className="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <Link href="/" className="text-2xl font-bold neon-text">
-              KLIQT Media
+            <Link href="/" className="flex items-center space-x-3">
+              <img
+                src="https://i.ibb.co/tpXKsYdQ/logo.png"
+                alt="KLIQT Media Logo"
+                className="h-10 w-auto"
+              />
+              <span className="text-2xl font-bold neon-text">KLIQT Media</span>
             </Link>
             <div className="hidden md:flex space-x-8">
               <Link href="/#services" className="hover:text-kliqt-primary transition-colors">Services</Link>
@@ -63,6 +68,13 @@ export default function PortalPage() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
             >
+              <div className="flex justify-center lg:justify-start mb-6">
+                <img
+                  src="https://i.ibb.co/tpXKsYdQ/logo.png"
+                  alt="KLIQT Media Logo"
+                  className="h-20 md:h-24 w-auto kliqt-glow"
+                />
+              </div>
               <h1 className="text-4xl md:text-6xl font-bold mb-6">
                 Welcome to the{' '}
                 <span className="neon-text">KLIQT Portal</span>
