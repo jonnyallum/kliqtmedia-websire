@@ -1,0 +1,476 @@
+openapi: 3.0.0
+info:
+  title: KLIQT Media Jobs API
+  description: Public API for accessing and posting job listings on KLIQT Media platform
+  version: 1.0.0
+  contact:
+    name: KLIQT Media API Support
+    email: api@kliqtmedia.co.uk
+    url: https://kliqtmedia.co.uk/developer
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://kliqtmedia.co.uk/api
+    description: Production server
+  - url: http://localhost:3007/api
+    description: Development server
+
+security:
+  - ApiKeyAuth: []
+
+paths:
+  /jobs/list:
+    get:
+      summary: Get job listings
+      description: Retrieve public job listings with optional filters. No authentication required.
+      operationId: getJobs
+      tags:
+        - Jobs
+      parameters:
+        - name: type
+          in: query
+          description: Filter by job type
+          schema:
+            type: string
+            enum: [wanted, available]
+          example: wanted
+        - name: category
+          in: query
+          description: Filter by job category
+          schema:
+            type: string
+          example: Web Development
+        - name: limit
+          in: query
+          description: Maximum number of jobs to return
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+          example: 10
+        - name: offset
+          in: query
+          description: Number of jobs to skip for pagination
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+          example: 0
+        - name: featured
+          in: query
+          description: Filter for featured jobs only
+          schema:
+            type: boolean
+          example: true
+      responses:
+        '200':
+          description: A list of job postings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Job'
+                  meta:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                        example: 18
+                      limit:
+                        type: integer
+                        example: 20
+                      offset:
+                        type: integer
+                        example: 0
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /jobs/post:
+    post:
+      summary: Post a new job
+      description: Create a new job listing. Requires API key with 'post_jobs' scope.
+      operationId: postJob
+      tags:
+        - Jobs
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobInput'
+      responses:
+        '201':
+          description: Job successfully created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Job posted successfully
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      title:
+                        type: string
+                      type:
+                        type: string
+                        enum: [wanted, available]
+                      status:
+                        type: string
+                        example: active
+                      created_at:
+                        type: string
+                        format: date-time
+        '400':
+          description: Bad request - validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: API key required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Invalid or insufficient API key permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /keys/generate:
+    post:
+      summary: Generate API key
+      description: Create a new API key with specified scopes. Requires user authentication.
+      operationId: generateApiKey
+      tags:
+        - API Keys
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  description: Friendly name for the API key
+                  example: My Integration Key
+                scopes:
+                  type: array
+                  items:
+                    type: string
+                    enum: [read_jobs, post_jobs, manage_jobs]
+                  default: [read_jobs]
+                  example: [read_jobs, post_jobs]
+                expires_at:
+                  type: string
+                  format: date-time
+                  description: Optional expiration date
+                  example: 2024-12-31T23:59:59Z
+      responses:
+        '201':
+          description: API key successfully created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: API key generated successfully
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      key:
+                        type: string
+                        example: kliqt_a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6
+                      name:
+                        type: string
+                        example: My Integration Key
+                      scopes:
+                        type: array
+                        items:
+                          type: string
+                        example: [read_jobs, post_jobs]
+                      expires_at:
+                        type: string
+                        format: date-time
+                        nullable: true
+                      created_at:
+                        type: string
+                        format: date-time
+        '400':
+          description: Bad request - validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    get:
+      summary: List API keys
+      description: Get all API keys for the authenticated user (keys are masked for security)
+      operationId: listApiKeys
+      tags:
+        - API Keys
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: List of user's API keys
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        name:
+                          type: string
+                        scopes:
+                          type: array
+                          items:
+                            type: string
+                        expires_at:
+                          type: string
+                          format: date-time
+                          nullable: true
+                        is_active:
+                          type: boolean
+                        last_used_at:
+                          type: string
+                          format: date-time
+                          nullable: true
+                        created_at:
+                          type: string
+                          format: date-time
+        '401':
+          description: Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: API key for accessing protected endpoints
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token from Supabase authentication
+
+  schemas:
+    Job:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        title:
+          type: string
+          example: Build Mobile App for Trading Platform
+        description:
+          type: string
+          example: Create a high-performance mobile app for a fintech trading startup...
+        type:
+          type: string
+          enum: [wanted, available]
+          example: wanted
+        category:
+          type: object
+          properties:
+            name:
+              type: string
+              example: Web Development
+            icon:
+              type: string
+              example: Code
+            color:
+              type: string
+              example: "#3B82F6"
+        budget:
+          type: object
+          properties:
+            min:
+              type: number
+              example: 8000
+            max:
+              type: number
+              example: 15000
+            currency:
+              type: string
+              example: GBP
+        location:
+          type: string
+          example: London, UK
+        remote:
+          type: boolean
+          example: true
+        featured:
+          type: boolean
+          example: true
+        urgent:
+          type: boolean
+          example: false
+        stats:
+          type: object
+          properties:
+            views:
+              type: integer
+              example: 203
+            applications:
+              type: integer
+              example: 18
+        created_at:
+          type: string
+          format: date-time
+          example: 2024-01-15T10:30:00Z
+
+    JobInput:
+      type: object
+      required:
+        - title
+        - description
+        - type
+        - category
+      properties:
+        title:
+          type: string
+          example: Senior React Developer Needed
+        description:
+          type: string
+          example: We are looking for an experienced React developer to join our team...
+        type:
+          type: string
+          enum: [wanted, available]
+          example: wanted
+        category:
+          type: string
+          example: Web Development
+        budget_min:
+          type: number
+          example: 5000
+        budget_max:
+          type: number
+          example: 10000
+        currency:
+          type: string
+          default: GBP
+          example: GBP
+        location:
+          type: string
+          example: London, UK
+        remote:
+          type: boolean
+          default: true
+          example: true
+        requirements:
+          type: string
+          example: 5+ years React experience, TypeScript, Node.js
+        company_name:
+          type: string
+          example: Tech Startup Ltd
+        company_description:
+          type: string
+          example: Innovative fintech company revolutionizing payments
+        contact_email:
+          type: string
+          format: email
+          example: hiring@techstartup.com
+        contact_phone:
+          type: string
+          example: +44 20 1234 5678
+        website_url:
+          type: string
+          format: uri
+          example: https://techstartup.com
+        featured:
+          type: boolean
+          default: false
+          example: false
+        urgent:
+          type: boolean
+          default: false
+          example: false
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Invalid API key
+
+tags:
+  - name: Jobs
+    description: Job listing operations
+  - name: API Keys
+    description: API key management

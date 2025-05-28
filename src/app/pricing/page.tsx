@@ -14,6 +14,18 @@ export default function PricingPage() {
     setLoadingCheckout(priceId)
     
     try {
+      // Show demo notification
+      const proceed = confirm(
+        `Demo Mode: This will create a test checkout session for "${packageName}".\n\n` +
+        'In production, this would redirect to Stripe Checkout.\n\n' +
+        'Click OK to continue with demo, or Cancel to return.'
+      )
+      
+      if (!proceed) {
+        setLoadingCheckout(null)
+        return
+      }
+
       const response = await fetch('/api/stripe/checkout', {
         method: 'POST',
         headers: {
@@ -21,27 +33,37 @@ export default function PricingPage() {
         },
         body: JSON.stringify({
           priceId,
+          customerEmail: 'demo@kliqtmedia.co.uk',
           metadata: {
             package_name: packageName,
             source: 'pricing_page',
+            demo_mode: 'true',
           },
         }),
       })
 
-      const { url, error } = await response.json()
+      const data = await response.json()
 
-      if (error) {
-        console.error('Checkout error:', error)
-        alert('Failed to create checkout session. Please try again.')
+      if (!response.ok || data.error) {
+        console.error('Checkout error:', data.error)
+        alert(`Checkout Error: ${data.error || 'Unknown error occurred'}`)
         return
       }
 
-      if (url) {
-        window.location.href = url
+      if (data.url) {
+        // In demo mode, show success message instead of redirecting
+        alert(
+          `Demo Success! 🎉\n\n` +
+          `Package: ${packageName}\n` +
+          `Session ID: ${data.sessionId}\n\n` +
+          'In production, you would be redirected to Stripe Checkout.'
+        )
+      } else {
+        alert('No checkout URL received. Please try again.')
       }
     } catch (error) {
       console.error('Checkout error:', error)
-      alert('Failed to create checkout session. Please try again.')
+      alert('Network error: Failed to create checkout session. Please check your connection and try again.')
     } finally {
       setLoadingCheckout(null)
     }

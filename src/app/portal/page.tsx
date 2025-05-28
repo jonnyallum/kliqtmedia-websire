@@ -1,13 +1,15 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { User, Lock, Mail, ArrowRight, Users, Bot, BarChart3, Settings, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth/context'
 
 export default function PortalPage() {
-  const { signIn, signUp, loading } = useAuth()
+  const { user, signIn, signUp, loading } = useAuth()
+  const router = useRouter()
   const [isLogin, setIsLogin] = useState(true)
   const [error, setError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -17,6 +19,13 @@ export default function PortalPage() {
     fullName: '',
     role: 'freelancer'
   })
+
+  // Redirect authenticated users to dashboard
+  useEffect(() => {
+    if (user && !loading) {
+      router.push('/portal/dashboard')
+    }
+  }, [user, loading, router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -49,6 +58,31 @@ export default function PortalPage() {
       ...formData,
       [e.target.name]: e.target.value
     })
+  }
+
+  const handleDemoLogin = async (role: 'freelancer' | 'client') => {
+    setIsSubmitting(true)
+    setError('')
+    
+    // Demo credentials
+    const demoCredentials = {
+      freelancer: { email: 'demo@freelancer.com', password: 'demo123' },
+      client: { email: 'demo@client.com', password: 'demo123' }
+    }
+    
+    try {
+      const { error } = await signIn(
+        demoCredentials[role].email,
+        demoCredentials[role].password
+      )
+      if (error) {
+        setError(`Demo ${role} account not available. Please create an account.`)
+      }
+    } catch (err) {
+      setError('Demo login failed')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const fadeInUp = {
@@ -108,26 +142,26 @@ export default function PortalPage() {
               </p>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
-                <div className="kliqt-card text-center">
-                  <Users className="h-8 w-8 text-kliqt-primary mx-auto mb-3" />
+                <Link href="/freelancers" className="kliqt-card text-center hover:scale-105 transition-transform cursor-pointer group">
+                  <Users className="h-8 w-8 text-kliqt-primary mx-auto mb-3 group-hover:animate-pulse" />
                   <h3 className="font-semibold mb-2">Freelancers</h3>
                   <p className="text-sm text-gray-400">Find projects, manage work, get paid</p>
-                </div>
-                <div className="kliqt-card text-center">
-                  <Bot className="h-8 w-8 text-kliqt-secondary mx-auto mb-3" />
+                </Link>
+                <Link href="/clients" className="kliqt-card text-center hover:scale-105 transition-transform cursor-pointer group">
+                  <Bot className="h-8 w-8 text-kliqt-secondary mx-auto mb-3 group-hover:animate-pulse" />
                   <h3 className="font-semibold mb-2">Clients</h3>
                   <p className="text-sm text-gray-400">Post projects, track progress, scale</p>
-                </div>
-                <div className="kliqt-card text-center">
-                  <BarChart3 className="h-8 w-8 text-kliqt-primary mx-auto mb-3" />
+                </Link>
+                <Link href="/analytics" className="kliqt-card text-center hover:scale-105 transition-transform cursor-pointer group">
+                  <BarChart3 className="h-8 w-8 text-kliqt-primary mx-auto mb-3 group-hover:animate-pulse" />
                   <h3 className="font-semibold mb-2">Analytics</h3>
                   <p className="text-sm text-gray-400">Real-time insights and reporting</p>
-                </div>
-                <div className="kliqt-card text-center">
-                  <Settings className="h-8 w-8 text-kliqt-secondary mx-auto mb-3" />
+                </Link>
+                <Link href="/ai-tools" className="kliqt-card text-center hover:scale-105 transition-transform cursor-pointer group">
+                  <Settings className="h-8 w-8 text-kliqt-secondary mx-auto mb-3 group-hover:animate-pulse" />
                   <h3 className="font-semibold mb-2">AI Tools</h3>
                   <p className="text-sm text-gray-400">Automation and smart workflows</p>
-                </div>
+                </Link>
               </div>
             </motion.div>
 
@@ -262,10 +296,18 @@ export default function PortalPage() {
               <div className="mt-6 text-center">
                 <p className="text-sm text-gray-400 mb-3">Quick Demo Access:</p>
                 <div className="flex flex-col sm:flex-row gap-2">
-                  <button className="flex-1 px-4 py-2 bg-kliqt-primary/20 text-kliqt-primary rounded-lg hover:bg-kliqt-primary/30 transition-colors text-sm">
+                  <button
+                    onClick={() => handleDemoLogin('freelancer')}
+                    disabled={isSubmitting || loading}
+                    className="flex-1 px-4 py-2 bg-kliqt-primary/20 text-kliqt-primary rounded-lg hover:bg-kliqt-primary/30 transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
                     Demo Freelancer
                   </button>
-                  <button className="flex-1 px-4 py-2 bg-kliqt-secondary/20 text-kliqt-secondary rounded-lg hover:bg-kliqt-secondary/30 transition-colors text-sm">
+                  <button
+                    onClick={() => handleDemoLogin('client')}
+                    disabled={isSubmitting || loading}
+                    className="flex-1 px-4 py-2 bg-kliqt-secondary/20 text-kliqt-secondary rounded-lg hover:bg-kliqt-secondary/30 transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
                     Demo Client
                   </button>
                 </div>

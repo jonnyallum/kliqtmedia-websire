@@ -1,9 +1,15 @@
+/**
+ * KLIQT Media Homepage
+ * Modern, professional homepage with service cards and portal integration
+ */
+
 'use client'
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowRight, Zap, Users, Bot, Star, ChevronDown } from 'lucide-react'
 import Link from 'next/link'
+import JobsBanner from '@/components/JobsBanner'
 
 export default function HomePage() {
   const [isLoaded, setIsLoaded] = useState(false)
@@ -14,8 +20,7 @@ export default function HomePage() {
 
   const fadeInUp = {
     initial: { opacity: 0, y: 60 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.6 }
+    animate: { opacity: 1, y: 0 }
   }
 
   const staggerContainer = {
@@ -27,7 +32,7 @@ export default function HomePage() {
   }
 
   return (
-    <main className="min-h-screen bg-black text-white overflow-hidden">
+    <main className="min-h-screen bg-black text-white">
       {/* Navigation */}
       <nav className="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -40,16 +45,18 @@ export default function HomePage() {
               <img
                 src="https://i.ibb.co/B5NV5MR1/kliqtsvg.png"
                 alt="KLIQT Media Logo"
-                className="h-10 w-auto"
+                className="h-8 w-auto"
               />
               <span className="text-2xl font-bold neon-text">KLIQT Media</span>
             </motion.div>
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               className="hidden md:flex space-x-8"
             >
               <Link href="#services" className="hover:text-kliqt-primary transition-colors">Services</Link>
+              <Link href="/jobs" className="hover:text-kliqt-primary transition-colors">Jobs</Link>
+              <Link href="/developer" className="hover:text-kliqt-primary transition-colors">API</Link>
               <Link href="#pricing" className="hover:text-kliqt-primary transition-colors">Pricing</Link>
               <Link href="#about" className="hover:text-kliqt-primary transition-colors">About</Link>
               <Link href="/portal" className="kliqt-btn-primary">Portal</Link>
@@ -59,55 +66,44 @@ export default function HomePage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center kliqt-gradient-bg">
-        <div className="absolute inset-0 bg-gradient-to-br from-kliqt-primary/5 via-transparent to-kliqt-secondary/5" />
-        
-        <motion.div
-          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10"
-          variants={staggerContainer}
-          initial="initial"
-          animate="animate"
-        >
+      <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto text-center">
           <motion.div
-            variants={fadeInUp}
-            className="flex justify-center mb-8"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="mb-8"
           >
             <img
               src="https://i.ibb.co/B5NV5MR1/kliqtsvg.png"
               alt="KLIQT Media Logo"
-              className="h-24 md:h-32 w-auto kliqt-glow"
+              className="h-16 md:h-20 w-auto mx-auto mb-6"
             />
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+              AI-Powered <span className="neon-text">Content</span> & 
+              <br />Creative <span className="neon-text">Solutions</span>
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto mb-8">
+              Supercharge your brand with our AI agents, freelancer network, and automation platforms. 
+              Scale your content, streamline your workflow, and dominate your market.
+            </p>
           </motion.div>
-          
-          <motion.h1
-            variants={fadeInUp}
-            className="text-4xl md:text-7xl font-bold mb-6"
-          >
-            Welcome to{' '}
-            <span className="neon-text kliqt-glow">KLIQT Media</span>
-          </motion.h1>
-          
-          <motion.p 
-            variants={fadeInUp}
-            className="text-xl md:text-2xl text-gray-300 mb-8 max-w-4xl mx-auto"
-          >
-            The UK's boldest media platform for content, freelancers, and AI-powered growth.
-            Scale your business with intelligent automation and expert creators.
-          </motion.p>
           
           <motion.div 
-            variants={fadeInUp}
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.8 }}
+            className="flex flex-col sm:flex-row gap-4 justify-center mb-16"
           >
-            <button className="kliqt-btn-primary kliqt-hover-lift group">
+            <Link href="/portal" className="kliqt-btn-primary kliqt-hover-lift">
               Get Started
-              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-            </button>
-            <button className="kliqt-btn-secondary kliqt-hover-lift">
-              View Services
-            </button>
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Link>
+            <Link href="#services" className="kliqt-btn-secondary kliqt-hover-lift">
+              Explore Services
+            </Link>
           </motion.div>
-        </motion.div>
+        </div>
 
         {/* Scroll Indicator */}
         <motion.div 
@@ -115,12 +111,12 @@ export default function HomePage() {
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
-          <ChevronDown className="h-8 w-8 text-kliqt-primary" />
+          <ChevronDown className="h-8 w-8 text-gray-400" />
         </motion.div>
       </section>
 
       {/* Services Section */}
-      <section id="services" className="py-20 bg-kliqt-dark">
+      <section id="services" className="py-20 bg-gray-900/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             className="text-center mb-16"
@@ -143,53 +139,59 @@ export default function HomePage() {
             whileInView="animate"
             viewport={{ once: true }}
           >
-            <motion.div variants={fadeInUp} className="kliqt-card kliqt-hover-lift">
-              <div className="flex items-center mb-4">
-                <Zap className="h-8 w-8 text-kliqt-primary mr-3" />
-                <h3 className="text-xl font-bold text-kliqt-primary">AI Content & SEO</h3>
-              </div>
-              <p className="text-gray-400 mb-4">
-                Powerful AI agents to supercharge your brand, boost your traffic, and automate growth.
-              </p>
-              <ul className="text-sm text-gray-300 space-y-2">
-                <li>• GPT-powered content generation</li>
-                <li>• SEO optimization & keyword research</li>
-                <li>• Automated social media posting</li>
-                <li>• Performance analytics & reporting</li>
-              </ul>
-            </motion.div>
+            <Link href="/services/ai-content-seo">
+              <motion.div variants={fadeInUp} className="kliqt-card kliqt-hover-lift cursor-pointer">
+                <div className="flex items-center mb-4">
+                  <Zap className="h-8 w-8 text-kliqt-primary mr-3" />
+                  <h3 className="text-xl font-bold text-kliqt-primary">AI Content & SEO</h3>
+                </div>
+                <p className="text-gray-400 mb-4">
+                  Powerful AI agents to supercharge your brand, boost your traffic, and automate growth.
+                </p>
+                <ul className="text-sm text-gray-300 space-y-2">
+                  <li>• GPT-powered content generation</li>
+                  <li>• SEO optimization & keyword research</li>
+                  <li>• Automated social media posting</li>
+                  <li>• Performance analytics & reporting</li>
+                </ul>
+              </motion.div>
+            </Link>
 
-            <motion.div variants={fadeInUp} className="kliqt-card kliqt-hover-lift">
-              <div className="flex items-center mb-4">
-                <Users className="h-8 w-8 text-kliqt-primary mr-3" />
-                <h3 className="text-xl font-bold text-kliqt-primary">Freelancer Network</h3>
-              </div>
-              <p className="text-gray-400 mb-4">
-                Connect with creators, editors, and devs. Real-time projects, real results.
-              </p>
-              <ul className="text-sm text-gray-300 space-y-2">
-                <li>• Vetted creative professionals</li>
-                <li>• Project management tools</li>
-                <li>• Real-time collaboration</li>
-                <li>• Quality assurance & reviews</li>
-              </ul>
-            </motion.div>
+            <Link href="/services/freelancer-network">
+              <motion.div variants={fadeInUp} className="kliqt-card kliqt-hover-lift cursor-pointer">
+                <div className="flex items-center mb-4">
+                  <Users className="h-8 w-8 text-kliqt-primary mr-3" />
+                  <h3 className="text-xl font-bold text-kliqt-primary">Freelancer Network</h3>
+                </div>
+                <p className="text-gray-400 mb-4">
+                  Connect with creators, editors, and devs. Real-time projects, real results.
+                </p>
+                <ul className="text-sm text-gray-300 space-y-2">
+                  <li>• Vetted creative professionals</li>
+                  <li>• Project management tools</li>
+                  <li>• Real-time collaboration</li>
+                  <li>• Quality assurance & reviews</li>
+                </ul>
+              </motion.div>
+            </Link>
 
-            <motion.div variants={fadeInUp} className="kliqt-card kliqt-hover-lift">
-              <div className="flex items-center mb-4">
-                <Bot className="h-8 w-8 text-kliqt-primary mr-3" />
-                <h3 className="text-xl font-bold text-kliqt-primary">Agent-Powered Platforms</h3>
-              </div>
-              <p className="text-gray-400 mb-4">
-                Use or license our automation and delegation agents for scale and speed.
-              </p>
-              <ul className="text-sm text-gray-300 space-y-2">
-                <li>• Custom AI agent development</li>
-                <li>• Workflow automation</li>
-                <li>• API integrations</li>
-                <li>• White-label solutions</li>
-              </ul>
-            </motion.div>
+            <Link href="/services/agent-powered-platforms">
+              <motion.div variants={fadeInUp} className="kliqt-card kliqt-hover-lift cursor-pointer">
+                <div className="flex items-center mb-4">
+                  <Bot className="h-8 w-8 text-kliqt-primary mr-3" />
+                  <h3 className="text-xl font-bold text-kliqt-primary">Agent-Powered Platforms</h3>
+                </div>
+                <p className="text-gray-400 mb-4">
+                  Use or license our automation and delegation agents for scale and speed.
+                </p>
+                <ul className="text-sm text-gray-300 space-y-2">
+                  <li>• Custom AI agent development</li>
+                  <li>• Workflow automation</li>
+                  <li>• API integrations</li>
+                  <li>• White-label solutions</li>
+                </ul>
+              </motion.div>
+            </Link>
           </motion.div>
         </div>
       </section>
@@ -223,8 +225,11 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Jobs Banner */}
+      <JobsBanner />
+
       {/* CTA Section */}
-      <section className="py-20 bg-kliqt-dark">
+      <section id="pricing" className="py-20 bg-black">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -250,7 +255,7 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-black border-t border-gray-800 py-12">
+      <footer id="about" className="bg-black border-t border-gray-800 py-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
@@ -269,25 +274,25 @@ export default function HomePage() {
             <div>
               <h4 className="font-semibold mb-4">Services</h4>
               <ul className="space-y-2 text-gray-400">
-                <li><Link href="#" className="hover:text-kliqt-primary transition-colors">AI Content</Link></li>
-                <li><Link href="#" className="hover:text-kliqt-primary transition-colors">Freelancers</Link></li>
-                <li><Link href="#" className="hover:text-kliqt-primary transition-colors">Automation</Link></li>
+                <li><Link href="/services/ai-content-seo" className="hover:text-kliqt-primary transition-colors">AI Content</Link></li>
+                <li><Link href="/services/freelancer-network" className="hover:text-kliqt-primary transition-colors">Freelancers</Link></li>
+                <li><Link href="/services/agent-powered-platforms" className="hover:text-kliqt-primary transition-colors">Automation</Link></li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold mb-4">Company</h4>
               <ul className="space-y-2 text-gray-400">
-                <li><Link href="#" className="hover:text-kliqt-primary transition-colors">About</Link></li>
-                <li><Link href="#" className="hover:text-kliqt-primary transition-colors">Careers</Link></li>
-                <li><Link href="#" className="hover:text-kliqt-primary transition-colors">Contact</Link></li>
+                <li><Link href="/about" className="hover:text-kliqt-primary transition-colors">About</Link></li>
+                <li><Link href="/jobs" className="hover:text-kliqt-primary transition-colors">Careers</Link></li>
+                <li><Link href="/contact" className="hover:text-kliqt-primary transition-colors">Contact</Link></li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold mb-4">Legal</h4>
               <ul className="space-y-2 text-gray-400">
-                <li><Link href="#" className="hover:text-kliqt-primary transition-colors">Privacy</Link></li>
-                <li><Link href="#" className="hover:text-kliqt-primary transition-colors">Terms</Link></li>
-                <li><Link href="#" className="hover:text-kliqt-primary transition-colors">Cookies</Link></li>
+                <li><Link href="/privacy" className="hover:text-kliqt-primary transition-colors">Privacy</Link></li>
+                <li><Link href="/terms" className="hover:text-kliqt-primary transition-colors">Terms</Link></li>
+                <li><Link href="/developer" className="hover:text-kliqt-primary transition-colors">API</Link></li>
               </ul>
             </div>
           </div>
