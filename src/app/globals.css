@@ -5,7 +5,7 @@
 /* KLIQT Media Custom Styles */
 @layer base {
   * {
-    @apply border-border;
+    @apply border-gray-800;
   }
   body {
     @apply bg-black text-white;
